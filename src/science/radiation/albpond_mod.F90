@@ -70,9 +70,9 @@ REAL(KIND=real_jlslsm), PARAMETER :: n_water = 1.33        ! Refractive index of
 REAL(KIND=real_jlslsm), PARAMETER :: ext_coeff_visible = 0.2152    ! Extintion coeffient of water
                                          ! from NEMO trc_oce.F90 rkrgb lookup table for 1.0 mg m-3 chlorophyll
                                          ! (averaged over blue, green and red)
-REAL(KIND=real_jlslsm), PARAMETER :: ext_coeff_nir = 2.857 ! Extintion coeffient of near infrared light in water  
+REAL(KIND=real_jlslsm), PARAMETER :: ext_coeff_nir = 2.857 ! Extintion coeffient of near infrared light in water
                                          ! 2.857 = 1.0 / rn_si0 = value used by NEMO
-REAL(KIND=real_jlslsm), PARAMETER :: RFD = 0.0659          ! Diffuse Fresnel reflection
+REAL(KIND=real_jlslsm), PARAMETER :: rfd = 0.0659          ! Diffuse Fresnel reflection
                                                            ! This is the integral of 2*fresnel_reflection*cos_angle_air*delta_cos
                                                            ! For air over water (with refractive indexes of 1 and 1.33)
                                                            ! this is a constant number.
@@ -84,7 +84,7 @@ REAL(KIND=jprb)               :: zhook_handle
 CHARACTER(LEN=*), PARAMETER :: RoutineName='ALBPOND_MAL'
 
 IF (lhook) CALL dr_hook(ModuleName//':'//RoutineName,zhook_in,zhook_handle)
- 
+
 ! Calculate the sin of transmitted angle (Snells law)
 angle_air = ACOS(cos_zenith_angle)
 sin_angle_water = n_air/n_water * SIN(angle_air)
@@ -116,7 +116,7 @@ IF (pond_albedo(1) > 1.0) pond_albedo(1) = 1.0
 IF (pond_albedo(1) < albpondv_cice) pond_albedo(1) = albpondv_cice
 
 ! For diffuse visible light use equation 9 of Malinka
-pond_albedo(2) = RFD + f_out**2 * bottom_albedo(2) / ( n_water**2 * (1 - bottom_albedo(2) * f_in) )
+pond_albedo(2) = rfd + f_out**2 * bottom_albedo(2) / ( n_water**2 * (1 - bottom_albedo(2) * f_in) )
 
 ! Apply limits to the diffuse_albedo
 IF (pond_albedo(2) > bottom_albedo(2)) pond_albedo(2) = bottom_albedo(2)
@@ -140,7 +140,7 @@ IF (pond_albedo(3) > 1.0) pond_albedo(3) = 1.0
 IF (pond_albedo(3) < 0.01) pond_albedo(3) = 0.01
 
 ! For diffuse NIR light use equation 9 of Malinka
-pond_albedo(4) = RFD + f_out**2 * bottom_albedo(4) / ( n_water**2 * (1 - bottom_albedo(4) * f_in) )
+pond_albedo(4) = rfd + f_out**2 * bottom_albedo(4) / ( n_water**2 * (1 - bottom_albedo(4) * f_in) )
 
 ! Apply limits to the diffuse_albedo
 IF (pond_albedo(4) > bottom_albedo(4)) pond_albedo(4) = bottom_albedo(4)
@@ -152,7 +152,7 @@ END SUBROUTINE albpond_mal
 ! -------------------------------------------------------
 ! --- Extra functions that the subroutine above calls
 
-FUNCTION reflected_fresnel(cos_angle_in, cos_angle_out, n_in, n_out) RESULT(R_F)
+FUNCTION reflected_fresnel(cos_angle_in, cos_angle_out, n_in, n_out) RESULT(r_f)
 
 IMPLICIT NONE
 
@@ -163,7 +163,7 @@ REAL(KIND=real_jlslsm), INTENT(IN) :: n_in
 REAL(KIND=real_jlslsm), INTENT(IN) :: n_out
 
 ! Returns
-REAL(KIND=real_jlslsm)  :: R_F    ! Total light reflected
+REAL(KIND=real_jlslsm)  :: r_f    ! Total light reflected
 
 ! Local
 REAL(KIND=real_jlslsm)  :: top    ! Top part of fresnel equations
@@ -185,7 +185,7 @@ bottom = n_in * cos_angle_out + n_out * cos_angle_in
 R_p = (top/bottom)**2.0
 
 ! Combine them by taking the average
-R_F = 0.5*(R_s+R_p)
+r_f = 0.5*(R_s+R_p)
 
 END FUNCTION reflected_fresnel
 

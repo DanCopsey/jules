@@ -612,7 +612,7 @@ IF (l_cice_alb) THEN
       IF (s_sea_cat(ll,n) > 0.0) THEN
         ! Note rhosnow in next line is required to convert s_sea_cat
         !        from kg/m2 to m
-        area_snow(ll) = s_sea_cat(ll,n)                                       &
+        area_snow(ll) = s_sea_cat(ll,n)                                        &
              / (s_sea_cat(ll,n) + snowpatch * rhosnow)
 
         ! If using zenith angle: there is a divide by area_snow.
@@ -632,7 +632,7 @@ IF (l_cice_alb) THEN
       ! Populate arrays for snow albedo calculation
       DO l = 1, sice_pts_ncat(n)
         ll = sice_index_ncat(l,n)
-        
+
         albudir_snow(ll,1) = albicev_cice
         albudir_snow(ll,2) = albicei_cice
         albudif_snow(ll,1) = albicev_cice
@@ -661,12 +661,12 @@ IF (l_cice_alb) THEN
       END DO
 
       ! Calculate the direct albedo for snow (varies with zenith angle)
-      CALL albsnow_ts(n_points,sice_pts_ncat(n),sice_index_ncat(:,n),  &
-                      cosz,albudir_snow,albudif_snow,                     &
-                      rgrain,snowmass,soot_gb,alb_snow) 
+      CALL albsnow_ts(n_points,sice_pts_ncat(n),sice_index_ncat(:,n),          &
+                      cosz,albudir_snow,albudif_snow,                          &
+                      rgrain,snowmass,soot_gb,alb_snow)
 
-    ! Simple snow on sea ice albedo scheme
-    ! just copies across the value in the namelist
+      ! Simple snow on sea ice albedo scheme
+      ! just copies across the value in the namelist
     ELSE
 
       DO band = 1, 4
@@ -690,11 +690,11 @@ IF (l_cice_alb) THEN
         ! Convert effective ice thickness (di_cat) to true ice
         ! thickness (hice):
         IF (l_fix_snow_frac) THEN
-          hice(j,n) = di_cat(j,n)                                            &
-                        - (kappai / kappai_snow)                             &
+          hice(j,n) = di_cat(j,n)                                              &
+                        - (kappai / kappai_snow)                               &
                         * (MAX(0.0, s_sea_cat(j,n)) / rhosnow)
         ELSE
-          hice(j,n) = di_cat(j,n)                                            &
+          hice(j,n) = di_cat(j,n)                                              &
                       - (kappai / kappai_snow) * (s_sea_cat(j,n) / rhosnow)
         END IF
       END IF
@@ -748,7 +748,7 @@ IF (l_cice_alb) THEN
         END IF       ! l_sice_scattering
 
       END DO
-     
+
       ! Calculate melt pond albedos
       SELECT CASE (i_meltpond_alb_vn)
       CASE (1)    ! Use set values for the Flocco et al. scheme
@@ -763,7 +763,7 @@ IF (l_cice_alb) THEN
       ! Combine all the snow, sea ice and melt pond albedos
       DO band = 1, 4
 
-        ! Dependence of pond albedo on pond depth 
+        ! Dependence of pond albedo on pond depth
         SELECT CASE (i_meltpond_alb_vn)
         CASE (1)    ! For Flocco et al. scheme gradially transition to melt pond albedos
           IF (pond_depth_cat(j,n) < 0.004) THEN  ! < 4mm bare ice albedo
@@ -781,12 +781,12 @@ IF (l_cice_alb) THEN
           ELSE IF (pond_depth_cat(j,n) > 0.01) THEN  ! > 1cm pond albedo
             albp(band) =  albpond(band)
           ELSE ! linear relationship between them
-            albp(band) = (pond_depth_cat(j,n) - 0.004) / (0.01 - 0.004) * albpond(band) +         &
+            albp(band) = (pond_depth_cat(j,n) - 0.004) / (0.01 - 0.004) * albpond(band) + &
                     (0.01 - pond_depth_cat(j,n)) / (0.01 - 0.004) * alb_sicat(ll,n,band)
           END IF
         END SELECT
 
-        IF (.not. l_zenith_albedo) THEN
+        IF (.NOT. l_zenith_albedo) THEN
           ! Original CICE snow temperature dependence when not using snow grain size
           ! temperature dependence
           IF (s_sea_cat(j,n) > 0.0) THEN
