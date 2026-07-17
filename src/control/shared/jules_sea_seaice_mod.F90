@@ -71,6 +71,17 @@ INTEGER, PARAMETER ::                                                          &
   ip_hwdrag_reduced_v1 = 2
          ! The drag at high winds is reduced over a range of speeds.
 !
+! Options for meltpond_alb_vn
+INTEGER, PARAMETER ::                                                          &
+  ip_meltpond_alb_vn_none    = 0
+         ! No melt ponds used. Basic albedo adjustment using temperature only.
+INTEGER, PARAMETER ::                                                          &
+  ip_meltpond_alb_vn_cice    = 1
+         ! Original CICE sea ice albedo scheme
+INTEGER, PARAMETER ::                                                          &
+  ip_meltpond_alb_vn_malinka = 2
+         ! Malinka et al sea ice albedo scheme
+!
 !----------------------------------------------------------------------------
 ! Switches
 !-----------------------------------------------------------------------------
@@ -121,9 +132,6 @@ INTEGER ::                                                                     &
       ! Set to the null option by default.
   i_meltpond_alb_vn = 0
       ! Melt pond albedo scheme version
-      ! 0 = No melt pond albedo scheme (just use temperature dependence)
-      ! 1 = CICE melt pond albedo scheme
-      ! 2 = Malinka melt pond albedo scheme
 
 ! The following setting is needed for setting up (UM-JULES) pseudo level IDs
 ! for water tracer fields on multiple sea ice categories.  It is not used
