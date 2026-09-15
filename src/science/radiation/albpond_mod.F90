@@ -101,7 +101,8 @@ transmitted_light = 1.0 - reflected_light
 ! ----------- Section on visible light ------------------
 
 ! For visible light calculate integrals in equations 4 and 5 by using pre-calculated
-! best fit parameters (calculated using malinka_find_best_fits.py).
+! best fit parameters calculated using malinka_find_best_fits.py in:
+! https://github.com/MetOffice/malinka_melt_ponds
 ! Use a small extinction coefficient valid for visible light.
 x = ext_coeff_visible * pond_depth
 f_out = EXP(-1.19335 * x) * 0.93404
@@ -125,7 +126,8 @@ IF (pond_albedo(2) < albpondv_cice) pond_albedo(2) = albpondv_cice
 ! ----------- Section on near infrared (NIR) light ------------------
 
 ! For NIR light calculate integrals in equations 4 and 5 by using pre-calculated
-! best fit parameters (calculated using malinka_find_best_fits.py).
+! best fit parameters calculated using malinka_find_best_fits.py in:
+! https://github.com/MetOffice/malinka_melt_ponds
 ! Use a large extinction coefficient valid for NIR light.
 x = ext_coeff_nir * pond_depth
 f_out = EXP(-1.18120 * x) * 0.93116
