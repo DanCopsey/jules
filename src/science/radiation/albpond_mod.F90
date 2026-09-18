@@ -142,7 +142,7 @@ IF (pond_albedo(1) > 1.0) pond_albedo(1) = 1.0
 IF (pond_albedo(1) < albpondv_cice) pond_albedo(1) = albpondv_cice
 
 ! For diffuse visible light use equation 9 of Malinka
-pond_albedo(2) = rfd + f_out**2 * bottom_albedo(2) / &
+pond_albedo(2) = rfd + f_out**2 * bottom_albedo(2) /                           &
                 ( n_water**2 * (1.0 - bottom_albedo(2) * f_in) )
 
 ! Apply limits to the diffuse_albedo
