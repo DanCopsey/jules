@@ -267,8 +267,8 @@ REAL(KIND=real_jlslsm) ::                                                      &
         ! Value for open sea heat capacity if required to be non-zero
     beta_evap = 1.0,                                                           &
         ! availability of surface moisture - 0.0 = none, 1.0 = open sea
-    snow_grain_size_min = 50.0,                                                &
-    snow_grain_size_max = 200.0
+    snow_grain_size_min = rmdi,                                                &
+    snow_grain_size_max = rmdi
 
 !-----------------------------------------------------------------------------
 ! Parameters for the COARE algorithm
@@ -407,6 +407,22 @@ IF (  l_icerough_prognostic .AND. l_iceformdrag_lupkes) THEN
   CALL ereport("check_jules_sea_seaice", errorstatus,                          &
                "l_icerough_prognostic and l_iceformdrag_lupkes " //            &
                "cannot both be .true.")
+END IF
+
+! Check that snow grain sizes are within acceptable range
+IF ( l_zenith_albedo ) THEN
+  IF ( snow_grain_size_max < 10 .OR. snow_grain_size_max > 500 ) THEN
+    errorstatus = 101
+    CALL ereport("check_jules_sea_seaice", errorstatus,                        &
+                 "snow_grain_size_max is not within acceptable limits: " //    &
+                 "10 to 500")
+  END IF
+  IF ( snow_grain_size_min < 10 .OR. snow_grain_size_min > 500 ) THEN
+    errorstatus = 101
+    CALL ereport("check_jules_sea_seaice", errorstatus,                        &
+                 "snow_grain_size_min is not within acceptable limits: " //    &
+                 "10 to 500")
+  END IF
 END IF
 
 END SUBROUTINE check_jules_sea_seaice
