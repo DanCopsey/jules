@@ -425,6 +425,25 @@ IF ( l_zenith_albedo ) THEN
   END IF
 END IF
 
+! Check that i_meltpond_alb_vn is an acceptable value
+SELECT CASE ( i_meltpond_alb_vn )
+  CASE ( ip_meltpond_alb_vn_none, ip_meltpond_alb_vn_cice,                     &
+         ip_meltpond_alb_vn_malinka )
+    ! Allowed values so nothing to report
+  CASE DEFAULT
+    errorstatus = 101
+    CALL ereport("check_jules_sea_seaice", errorstatus,                        &
+              'i_meltpond_alb_vn must be none(0), cice(1) or malinka(2)')
+END SELECT
+
+! Check that snowpath is within the acceptable range
+IF ( snowpatch < 0 .OR. snow_patch > 1 ) THEN
+  errorstatus = 101
+  CALL ereport("check_jules_sea_seaice", errorstatus,                          &
+               "snowpatch is not within acceptable limits: " //                &
+               "0 to 1")
+END IF
+
 END SUBROUTINE check_jules_sea_seaice
 
 
