@@ -427,13 +427,13 @@ END IF
 
 ! Check that meltpond_alb_vn is an acceptable value
 SELECT CASE ( meltpond_alb_vn )
-  CASE ( ip_meltpond_alb_vn_none, ip_meltpond_alb_vn_cice,                     &
-         ip_meltpond_alb_vn_malinka )
-    ! Allowed values so nothing to report
-  CASE DEFAULT
-    errorstatus = 101
-    CALL ereport("check_jules_sea_seaice", errorstatus,                        &
-              'meltpond_alb_vn must be none(0), cice(1) or malinka(2)')
+CASE ( ip_meltpond_alb_vn_none, ip_meltpond_alb_vn_cice,                       &
+       ip_meltpond_alb_vn_malinka )
+  ! Allowed values so nothing to report
+CASE DEFAULT
+  errorstatus = 101
+  CALL ereport("check_jules_sea_seaice", errorstatus,                          &
+            'meltpond_alb_vn must be none(0), cice(1) or malinka(2)')
 END SELECT
 
 ! Check that snowpath is within the acceptable range
