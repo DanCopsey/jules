@@ -59,7 +59,7 @@ USE jules_radiation_mod, ONLY: i_sea_alb_method, l_spec_sea_alb,               &
                                 l_sea_alb_var_chl, fixed_sea_albedo
 
 USE jules_sea_seaice_mod, ONLY: l_ssice_albedo, l_sice_meltponds,              &
-                                 i_meltpond_alb_vn, l_zenith_albedo,           &
+                                 meltpond_alb_vn, l_zenith_albedo,             &
                                  l_sice_scattering, l_sice_swpen,              &
                                  l_sice_multilayers, l_cice_alb,               &
                                  snow_grain_size_min, snow_grain_size_max
@@ -705,7 +705,7 @@ IF (l_cice_alb) THEN
         fh = MIN(ATAN(hice(j,n) * 4.0) / fhtan, 1.0)
         albo = albice(band) * fh + adifc * (1.0 - fh)
 
-        IF ( l_sice_meltponds .AND. ( i_meltpond_alb_vn == 0 ) ) THEN
+        IF ( l_sice_meltponds .AND. ( meltpond_alb_vn == 0 ) ) THEN
           ! Bare ice, simple meltpond scheme (temperature dependence)
           fT = MIN(tm - tstar_sice_cat(j,n) - dt_bare_cice, 0.0)
           alb_sicat(ll,n,band) = MAX(albo - dalb_mlt_cice * fT, adifc)
@@ -750,7 +750,7 @@ IF (l_cice_alb) THEN
       END DO
 
       ! Calculate melt pond albedos
-      SELECT CASE (i_meltpond_alb_vn)
+      SELECT CASE (meltpond_alb_vn)
       CASE (1)    ! Use set values for the Flocco et al. scheme
         albpond(1) = albpondv_cice
         albpond(2) = albpondv_cice
@@ -764,7 +764,7 @@ IF (l_cice_alb) THEN
       DO band = 1, 4
 
         ! Dependence of pond albedo on pond depth
-        SELECT CASE (i_meltpond_alb_vn)
+        SELECT CASE (meltpond_alb_vn)
         CASE (1)    ! For Flocco et al. scheme gradially transition to melt pond albedos
           IF (pond_depth_cat(j,n) < 0.004) THEN  ! < 4mm bare ice albedo
             albp(band) = alb_sicat(ll,n,band)
@@ -806,7 +806,7 @@ IF (l_cice_alb) THEN
         END IF
 
         ! Combine snow and ice albedo with pond albedo
-        IF (i_meltpond_alb_vn >= 1) THEN
+        IF (meltpond_alb_vn >= 1) THEN
           IF (nice_use == nice) THEN
             IF (pond_depth_cat(j,n) < 0.004) THEN
               pond_frac_cat_use = 0.0

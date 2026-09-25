@@ -130,7 +130,7 @@ INTEGER ::                                                                     &
   i_high_wind_drag = ip_hwdrag_null,                                           &
       ! Option to impose a special treatment of drag at high wind speeds.
       ! Set to the null option by default.
-  i_meltpond_alb_vn = 0
+  meltpond_alb_vn = 0
       ! Melt pond albedo scheme version
 
 ! The following setting is needed for setting up (UM-JULES) pseudo level IDs
@@ -328,7 +328,7 @@ REAL(KIND=real_jlslsm)    ::  ce_floe           = 0.222
 NAMELIST  / jules_sea_seaice/                                                  &
 ! Switches
     nice, nice_use, l_tstar_sice_new, l_ssice_albedo, l_sice_scattering,       &
-    l_sice_swpen, l_sice_meltponds,  i_meltpond_alb_vn, l_zenith_albedo,       &
+    l_sice_swpen, l_sice_meltponds,  meltpond_alb_vn, l_zenith_albedo,         &
     l_sice_multilayers, l_cice_alb, l_sice_heatflux, l_saldep_freeze,          &
     l_icerough_prognostic,                                                     &
     l_ctile, l_iceformdrag_lupkes, l_stability_lupkes, iseasurfalg,            &
@@ -425,15 +425,15 @@ IF ( l_zenith_albedo ) THEN
   END IF
 END IF
 
-! Check that i_meltpond_alb_vn is an acceptable value
-SELECT CASE ( i_meltpond_alb_vn )
+! Check that meltpond_alb_vn is an acceptable value
+SELECT CASE ( meltpond_alb_vn )
   CASE ( ip_meltpond_alb_vn_none, ip_meltpond_alb_vn_cice,                     &
          ip_meltpond_alb_vn_malinka )
     ! Allowed values so nothing to report
   CASE DEFAULT
     errorstatus = 101
     CALL ereport("check_jules_sea_seaice", errorstatus,                        &
-              'i_meltpond_alb_vn must be none(0), cice(1) or malinka(2)')
+              'meltpond_alb_vn must be none(0), cice(1) or malinka(2)')
 END SELECT
 
 ! Check that snowpath is within the acceptable range
@@ -479,7 +479,7 @@ CALL jules_print('jules_sea_seaice', lineBuffer)
 WRITE(lineBuffer, *) '  l_sice_meltponds = ', l_sice_meltponds
 CALL jules_print('jules_sea_seaice', lineBuffer)
 
-WRITE(lineBuffer, *) '  i_meltpond_alb_vn = ', i_meltpond_alb_vn
+WRITE(lineBuffer, *) '  meltpond_alb_vn = ', meltpond_alb_vn
 CALL jules_print('jules_sea_seaice', lineBuffer)
 
 WRITE(lineBuffer, *) '  l_zenith_albedo = ', l_zenith_albedo
@@ -746,7 +746,7 @@ TYPE :: my_namelist
   INTEGER :: iseasurfalg
   INTEGER :: buddy_sea
   INTEGER :: i_high_wind_drag
-  INTEGER :: i_meltpond_alb_vn
+  INTEGER :: meltpond_alb_vn
   REAL(KIND=real_jlslsm) :: z0miz
   REAL(KIND=real_jlslsm) :: z0sice
   REAL(KIND=real_jlslsm) :: z0h_z0m_miz
@@ -842,7 +842,7 @@ IF (mype == 0) THEN
   my_nml % iseasurfalg        = iseasurfalg
   my_nml % buddy_sea          = buddy_sea
   my_nml % i_high_wind_drag   = i_high_wind_drag
-  my_nml % i_meltpond_alb_vn  = i_meltpond_alb_vn
+  my_nml % meltpond_alb_vn    = meltpond_alb_vn
   my_nml % z0miz              = z0miz
   my_nml % z0sice             = z0sice
   my_nml % z0h_z0m_miz        = z0h_z0m_miz
@@ -927,7 +927,7 @@ IF (mype /= 0) THEN
   iseasurfalg        = my_nml % iseasurfalg
   buddy_sea          = my_nml % buddy_sea
   i_high_wind_drag   = my_nml % i_high_wind_drag
-  i_meltpond_alb_vn  = my_nml % i_meltpond_alb_vn
+  meltpond_alb_vn    = my_nml % meltpond_alb_vn
   z0miz              = my_nml % z0miz
   z0sice             = my_nml % z0sice
   z0h_z0m_miz        = my_nml % z0h_z0m_miz
