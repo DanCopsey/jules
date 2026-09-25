@@ -437,7 +437,7 @@ CASE DEFAULT
 END SELECT
 
 ! Check that snowpath is within the acceptable range
-IF ( snowpatch < 0 .OR. snow_patch > 1 ) THEN
+IF ( snowpatch < 0 .OR. snowpatch > 1 ) THEN
   errorstatus = 101
   CALL ereport("check_jules_sea_seaice", errorstatus,                          &
                "snowpatch is not within acceptable limits: " //                &
